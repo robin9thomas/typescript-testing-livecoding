@@ -1,4 +1,4 @@
-const { getShippingCost } = require("./index");
+import { getShippingCost } from "./index";
 
 describe("getShippingCost", () => {
   describe("if total article price greater than or equal to 100", () => {
