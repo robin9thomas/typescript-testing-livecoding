@@ -11,7 +11,7 @@ function getShippingCost(articles: Article[]) {
     (total, article) => total + article.priceEur * article.quantity,
     0
   );
-  return totalPrice >= 10
+  return totalPrice >= 100
     ? 0
     : articles.reduce(
         (total, article) =>
