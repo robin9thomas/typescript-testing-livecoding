@@ -34,21 +34,4 @@ function getShippingCost(articles) {
         );
 }
 
-console.log(getShippingCost(articlesExample));
-console.log(
-  getShippingCost([{ id: "1234", priceEur: 40, weightKg: 0.3, quantity: 2 }])
-);
-
-console.log(
-  getShippingCost([
-    {
-      id: "1234",
-      priceEur: 4,
-      weightKg: 0.3,
-      quantity: 2,
-      specialShippingCost: 8,
-    },
-    { id: "5678", priceEur: 2, weightKg: 0.1, quantity: 5 },
-    { id: "5678", priceEur: 2, weightKg: 0.1, quantity: 1 },
-  ])
-);
+module.exports = { getShippingCost };
