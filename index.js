@@ -5,12 +5,19 @@ const articlesExample = [
 ];
 
 function getShippingCost(articles) {
-  return (
-    articles.reduce(
-      (total, article) => total + article.weightKg * article.quantity,
-      0
-    ) * 10
+  const totalPrice = articles.reduce(
+    (total, article) => total + article.priceEur * article.quantity,
+    0
   );
+  return totalPrice >= 100
+    ? 0
+    : articles.reduce(
+        (total, article) => total + article.weightKg * article.quantity,
+        0
+      ) * 10;
 }
 
 console.log(getShippingCost(articlesExample));
+console.log(
+  getShippingCost([{ id: "1234", priceEur: 40, weightKg: 0.3, quantity: 2 }])
+);
