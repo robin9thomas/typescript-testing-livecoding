@@ -19,19 +19,11 @@ function getShippingCost(articles) {
     ? 0
     : articles.reduce(
         (total, article) =>
-          article.specialShippingCost
-            ? total
-            : total + article.weightKg * article.quantity,
+          total +
+          (article.specialShippingCost || article.weightKg * 10) *
+            article.quantity,
         0
-      ) *
-        10 +
-        articles.reduce(
-          (total, article) =>
-            article.specialShippingCost
-              ? total + article.specialShippingCost * article.quantity
-              : total,
-          0
-        );
+      );
 }
 
 module.exports = { getShippingCost };
