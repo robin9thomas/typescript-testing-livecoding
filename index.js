@@ -1,5 +1,11 @@
 const articlesExample = [
-  { id: "1234", priceEur: 40, weightKg: 0.3, quantity: 2 },
+  {
+    id: "1234",
+    priceEur: 40,
+    weightKg: 0.3,
+    quantity: 2,
+    specialShippingCost: 8,
+  },
   { id: "5678", priceEur: 20, weightKg: 0.1, quantity: 5 },
   { id: "5678", priceEur: 20, weightKg: 0.1, quantity: 1 },
 ];
@@ -12,12 +18,37 @@ function getShippingCost(articles) {
   return totalPrice >= 100
     ? 0
     : articles.reduce(
-        (total, article) => total + article.weightKg * article.quantity,
+        (total, article) =>
+          article.specialShippingCost
+            ? total
+            : total + article.weightKg * article.quantity,
         0
-      ) * 10;
+      ) *
+        10 +
+        articles.reduce(
+          (total, article) =>
+            article.specialShippingCost
+              ? total + article.specialShippingCost * article.quantity
+              : total,
+          0
+        );
 }
 
 console.log(getShippingCost(articlesExample));
 console.log(
   getShippingCost([{ id: "1234", priceEur: 40, weightKg: 0.3, quantity: 2 }])
+);
+
+console.log(
+  getShippingCost([
+    {
+      id: "1234",
+      priceEur: 4,
+      weightKg: 0.3,
+      quantity: 2,
+      specialShippingCost: 8,
+    },
+    { id: "5678", priceEur: 2, weightKg: 0.1, quantity: 5 },
+    { id: "5678", priceEur: 2, weightKg: 0.1, quantity: 1 },
+  ])
 );
