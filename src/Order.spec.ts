@@ -42,3 +42,11 @@ describe("static createOrder", () => {
     });
   });
 });
+
+describe("submitOrder", () => {
+  it("sets `submitted` to true", () => {
+    const order = new Order();
+    order.submitOrder();
+    expect(order.submitted).toEqual(true);
+  });
+});

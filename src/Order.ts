@@ -30,6 +30,8 @@ export class Order {
   id!: string;
   articlesInOrder: ArticleInOrder[] = [];
 
+  submitted: boolean = false;
+
   static createOrder(
     articlesInOrder: { articleId: string; quantity: number }[]
   ): Order {
@@ -44,5 +46,9 @@ export class Order {
     }
 
     return order;
+  }
+
+  submitOrder() {
+    this.submitted = true;
   }
 }
