@@ -6,14 +6,28 @@ describe("getShippingCost", () => {
       expect(
         getShippingCost([
           {
-            id: "1234",
-            priceEur: 40,
-            weightKg: 0.3,
+            article: {
+              id: "1234",
+              name: "Table",
+              priceEur: 40,
+              weightKg: 0.3,
+              specialShippingCost: 8,
+            },
             quantity: 2,
-            specialShippingCost: 8,
           },
-          { id: "5678", priceEur: 20, weightKg: 0.1, quantity: 5 },
-          { id: "5678", priceEur: 20, weightKg: 0.1, quantity: 1 },
+          {
+            article: {
+              id: "5678",
+              name: "Chaise",
+              priceEur: 20,
+              weightKg: 0.1,
+            },
+            quantity: 5,
+          },
+          {
+            article: { id: "5678", name: "Sac", priceEur: 20, weightKg: 0.1 },
+            quantity: 1,
+          },
         ])
       ).toEqual(0);
     });
@@ -24,14 +38,28 @@ describe("getShippingCost", () => {
       expect(
         getShippingCost([
           {
-            id: "1234",
-            priceEur: 4,
-            weightKg: 0.3,
+            article: {
+              id: "1234",
+              name: "Table",
+              priceEur: 4,
+              weightKg: 0.3,
+              specialShippingCost: 8,
+            },
             quantity: 2,
-            specialShippingCost: 8,
           },
-          { id: "5678", priceEur: 2, weightKg: 0.1, quantity: 5 },
-          { id: "5678", priceEur: 2, weightKg: 0.1, quantity: 1 },
+          {
+            article: {
+              id: "5678",
+              name: "Chaise",
+              priceEur: 2,
+              weightKg: 0.1,
+            },
+            quantity: 5,
+          },
+          {
+            article: { id: "5678", name: "Sac", priceEur: 2, weightKg: 0.1 },
+            quantity: 1,
+          },
         ])
       ).toEqual(2 * 8 + 6 * 0.1 * 10); // 22
     });
@@ -43,14 +71,28 @@ describe("getOrderCost", () => {
     expect(
       getOrderCost([
         {
-          id: "1234",
-          priceEur: 4,
-          weightKg: 0.3,
+          article: {
+            id: "1234",
+            name: "Table",
+            priceEur: 4,
+            weightKg: 0.3,
+            specialShippingCost: 8,
+          },
           quantity: 2,
-          specialShippingCost: 8,
         },
-        { id: "5678", priceEur: 2, weightKg: 0.1, quantity: 5 },
-        { id: "5678", priceEur: 2, weightKg: 0.1, quantity: 1 },
+        {
+          article: {
+            id: "5678",
+            name: "Chaise",
+            priceEur: 2,
+            weightKg: 0.1,
+          },
+          quantity: 5,
+        },
+        {
+          article: { id: "5678", name: "Sac", priceEur: 2, weightKg: 0.1 },
+          quantity: 1,
+        },
       ])
     ).toEqual({
       totalWithoutShipping: 20,
