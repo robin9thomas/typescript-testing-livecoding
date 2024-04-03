@@ -1,3 +1,5 @@
+import { sendEmail } from "./lib/email";
+
 type Article = {
   id: string;
   name: string;
@@ -51,6 +53,7 @@ export class Order {
 
   submitOrder() {
     this.submitted = true;
+    sendEmail();
   }
 
   private getTotalPrice(): number {

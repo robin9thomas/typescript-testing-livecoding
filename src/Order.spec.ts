@@ -1,4 +1,7 @@
 import { Order } from "./Order";
+import { sendEmail } from "./lib/email";
+
+jest.mock("./lib/email");
 
 describe("static createOrder", () => {
   describe("when all article IDs belong to articles in table", () => {
@@ -49,6 +52,13 @@ describe("submitOrder", () => {
     const order = new Order();
     order.submitOrder();
     expect(order.submitted).toEqual(true);
+  });
+
+  it("calls function `sendEmail`", () => {
+    const order = new Order();
+    order.submitOrder();
+
+    expect(sendEmail).toHaveBeenCalledTimes(1);
   });
 });
 
