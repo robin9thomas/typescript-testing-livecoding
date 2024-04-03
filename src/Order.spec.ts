@@ -5,8 +5,8 @@ jest.mock("./lib/email");
 
 describe("static createOrder", () => {
   describe("when all article IDs belong to articles in table", () => {
-    it("returns new Order with articles", () => {
-      const order = Order.createOrder([
+    it("returns new Order with articles", async () => {
+      const order = await Order.createOrder([
         { articleId: "1234", quantity: 4 },
         { articleId: "5678", quantity: 1 },
       ]);
@@ -42,7 +42,7 @@ describe("static createOrder", () => {
           { articleId: "1234", quantity: 4 },
           { articleId: "0000", quantity: 1 },
         ]);
-      }).toThrow("Article with ID 0000 not found.");
+      }).rejects.toThrow("Article with ID 0000 not found.");
     });
   });
 });
@@ -64,8 +64,8 @@ describe("submitOrder", () => {
 
 describe("getShippingCost", () => {
   describe("if total article price greater than or equal to 100", () => {
-    it("returns 0", () => {
-      const order = Order.createOrder([
+    it("returns 0", async () => {
+      const order = await Order.createOrder([
         {
           articleId: "1234",
           quantity: 5,
@@ -77,8 +77,8 @@ describe("getShippingCost", () => {
   });
 
   describe("if total article price less than 100", () => {
-    it("returns 10 euros per kilogram of total weight, excluding articles with special shipping, whose amount is added to total", () => {
-      const order = Order.createOrder([
+    it("returns 10 euros per kilogram of total weight, excluding articles with special shipping, whose amount is added to total", async () => {
+      const order = await Order.createOrder([
         {
           articleId: "1234",
           quantity: 2,
@@ -95,8 +95,8 @@ describe("getShippingCost", () => {
 });
 
 describe("getOrderCost", () => {
-  it("returns total with and without shipping, and shipping", () => {
-    const order = Order.createOrder([
+  it("returns total with and without shipping, and shipping", async () => {
+    const order = await Order.createOrder([
       {
         articleId: "1234",
         quantity: 2,

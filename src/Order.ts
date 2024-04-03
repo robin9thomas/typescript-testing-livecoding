@@ -1,51 +1,44 @@
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+
 import { sendEmail } from "./lib/email";
+import { Article } from "./Article";
+import { ArticleInOrder } from "./ArticleInOrder";
 
-type Article = {
-  id: string;
-  name: string;
-  priceEur: number;
-  weightKg: number;
-  specialShippingCost?: number;
-};
-
-export type ArticleInOrder = {
-  article: Article;
-  quantity: number;
-};
-
-const ARTICLES: Article[] = [
-  {
-    id: "1234",
-    name: "Câble HDMI",
-    priceEur: 20,
-    weightKg: 0.1,
-  },
-  {
-    id: "5678",
-    name: "Cuisse de poulet",
-    priceEur: 10,
-    weightKg: 0.15,
-    specialShippingCost: 4,
-  },
-];
-
-export class Order {
+@Entity()
+export class Order extends BaseEntity {
+  @PrimaryGeneratedColumn("uuid")
   id!: string;
-  articlesInOrder: ArticleInOrder[] = [];
 
-  submitted: boolean = false;
+  @OneToMany(() => ArticleInOrder, (articleInOrder) => articleInOrder.order)
+  articlesInOrder!: ArticleInOrder[];
 
-  static createOrder(
+  @Column({ default: false })
+  submitted!: boolean;
+
+  static async createOrder(
     articlesInOrder: { articleId: string; quantity: number }[]
-  ): Order {
+  ): Promise<Order> {
     const order = new Order();
 
     for (const { articleId, quantity } of articlesInOrder) {
-      const article = ARTICLES.find((article) => article.id === articleId);
+      const article = await Article.findOne({ where: { id: articleId } });
       if (!article) {
         throw new Error(`Article with ID ${articleId} not found.`);
       }
-      order.articlesInOrder.push({ article, quantity });
+
+      const articleInOrder = ArticleInOrder.create();
+      articleInOrder.order = order;
+      articleInOrder.article = article;
+      articleInOrder.quantity = quantity;
+      await articleInOrder.save();
+
+      order.articlesInOrder.push(articleInOrder);
     }
 
     return order;
