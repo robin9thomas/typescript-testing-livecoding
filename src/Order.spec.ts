@@ -24,6 +24,7 @@ describe("static createOrder", () => {
             name: "Cuisse de poulet",
             priceEur: 10,
             weightKg: 0.15,
+            specialShippingCost: 4,
           },
           quantity: 1,
         },
@@ -48,5 +49,58 @@ describe("submitOrder", () => {
     const order = new Order();
     order.submitOrder();
     expect(order.submitted).toEqual(true);
+  });
+});
+
+describe("getShippingCost", () => {
+  describe("if total article price greater than or equal to 100", () => {
+    it("returns 0", () => {
+      const order = Order.createOrder([
+        {
+          articleId: "1234",
+          quantity: 5,
+        },
+      ]);
+
+      expect(order.getShippingCost()).toEqual(0);
+    });
+  });
+
+  describe("if total article price less than 100", () => {
+    it("returns 10 euros per kilogram of total weight, excluding articles with special shipping, whose amount is added to total", () => {
+      const order = Order.createOrder([
+        {
+          articleId: "1234",
+          quantity: 2,
+        },
+        {
+          articleId: "5678",
+          quantity: 3,
+        },
+      ]);
+
+      expect(order.getShippingCost()).toEqual(2 * 1 + 3 * 4); // 14
+    });
+  });
+});
+
+describe("getOrderCost", () => {
+  it("returns total with and without shipping, and shipping", () => {
+    const order = Order.createOrder([
+      {
+        articleId: "1234",
+        quantity: 2,
+      },
+      {
+        articleId: "5678",
+        quantity: 3,
+      },
+    ]);
+
+    expect(order.getOrderCost()).toEqual({
+      totalWithoutShipping: 70,
+      shipping: 14,
+      totalWithShipping: 84,
+    });
   });
 });

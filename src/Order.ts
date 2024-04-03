@@ -11,7 +11,7 @@ export type ArticleInOrder = {
   quantity: number;
 };
 
-const ARTICLES = [
+const ARTICLES: Article[] = [
   {
     id: "1234",
     name: "Câble HDMI",
@@ -23,6 +23,7 @@ const ARTICLES = [
     name: "Cuisse de poulet",
     priceEur: 10,
     weightKg: 0.15,
+    specialShippingCost: 4,
   },
 ];
 
@@ -50,5 +51,38 @@ export class Order {
 
   submitOrder() {
     this.submitted = true;
+  }
+
+  private getTotalPrice(): number {
+    return this.articlesInOrder.reduce(
+      (total, { article, quantity }) => total + article.priceEur * quantity,
+      0
+    );
+  }
+
+  getShippingCost(): number {
+    return this.getTotalPrice() >= 100
+      ? 0
+      : this.articlesInOrder.reduce(
+          (total, { article, quantity }) =>
+            total +
+            (article.specialShippingCost || article.weightKg * 10) * quantity,
+          0
+        );
+  }
+
+  getOrderCost(): {
+    totalWithoutShipping: number;
+    shipping: number;
+    totalWithShipping: number;
+  } {
+    const totalWithoutShipping = this.getTotalPrice();
+    const shipping = this.getShippingCost();
+
+    return {
+      totalWithoutShipping,
+      shipping,
+      totalWithShipping: totalWithoutShipping + shipping,
+    };
   }
 }
