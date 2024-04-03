@@ -1,4 +1,4 @@
-import { getShippingCost } from "./index";
+import { getOrderCost, getShippingCost } from "./index";
 
 describe("getShippingCost", () => {
   describe("if total article price greater than or equal to 100", () => {
@@ -34,6 +34,28 @@ describe("getShippingCost", () => {
           { id: "5678", priceEur: 2, weightKg: 0.1, quantity: 1 },
         ])
       ).toEqual(2 * 8 + 6 * 0.1 * 10); // 22
+    });
+  });
+});
+
+describe("getOrderCost", () => {
+  it("returns total with and without shipping, and shipping", () => {
+    expect(
+      getOrderCost([
+        {
+          id: "1234",
+          priceEur: 4,
+          weightKg: 0.3,
+          quantity: 2,
+          specialShippingCost: 8,
+        },
+        { id: "5678", priceEur: 2, weightKg: 0.1, quantity: 5 },
+        { id: "5678", priceEur: 2, weightKg: 0.1, quantity: 1 },
+      ])
+    ).toEqual({
+      totalWithoutShipping: 20,
+      shipping: 22,
+      totalWithShipping: 42,
     });
   });
 });

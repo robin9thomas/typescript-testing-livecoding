@@ -6,12 +6,15 @@ type Article = {
   specialShippingCost?: number;
 };
 
-function getShippingCost(articles: Article[]) {
-  const totalPrice = articles.reduce(
+function getTotalPrice(articles: Article[]) {
+  return articles.reduce(
     (total, article) => total + article.priceEur * article.quantity,
     0
   );
-  return totalPrice >= 100
+}
+
+function getShippingCost(articles: Article[]) {
+  return getTotalPrice(articles) >= 100
     ? 0
     : articles.reduce(
         (total, article) =>
@@ -22,4 +25,19 @@ function getShippingCost(articles: Article[]) {
       );
 }
 
-export { getShippingCost };
+function getOrderCost(articles: Article[]): {
+  totalWithoutShipping: number;
+  shipping: number;
+  totalWithShipping: number;
+} {
+  const totalWithoutShipping = getTotalPrice(articles);
+  const shipping = getShippingCost(articles);
+
+  return {
+    totalWithoutShipping,
+    shipping,
+    totalWithShipping: totalWithoutShipping + shipping,
+  };
+}
+
+export { getShippingCost, getOrderCost };
