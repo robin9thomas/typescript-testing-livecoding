@@ -1,7 +1,18 @@
+import { DataSource } from "typeorm";
 import { Order } from "./Order";
 import { sendEmail } from "./lib/email";
+import { getNewDataSource } from "./config/database";
 
 jest.mock("./lib/email");
+
+let dataSource: DataSource;
+beforeEach(async () => {
+  dataSource = await getNewDataSource();
+});
+
+afterEach(async () => {
+  await dataSource.destroy();
+});
 
 describe("static createOrder", () => {
   describe("when all article IDs belong to articles in table", () => {
