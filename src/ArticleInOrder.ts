@@ -16,7 +16,9 @@ export class ArticleInOrder extends BaseEntity {
   @ManyToOne(() => Order, (order) => order.articlesInOrder)
   order!: Order;
 
-  @ManyToOne(() => Article, (article) => article.ordersWithArticle)
+  @ManyToOne(() => Article, (article) => article.ordersWithArticle, {
+    eager: true,
+  })
   article!: Article;
 
   @Column()

@@ -29,10 +29,10 @@ export class Article extends BaseEntity {
   @Column()
   name!: string;
 
-  @Column()
+  @Column({ type: "real" })
   priceEur!: number;
 
-  @Column()
+  @Column({ type: "real" })
   weightKg!: number;
 
   @Column({ type: "integer", nullable: true })

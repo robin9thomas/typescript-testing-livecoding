@@ -2,12 +2,15 @@ import { DataSource } from "typeorm";
 import { Order } from "./Order";
 import { sendEmail } from "./lib/email";
 import { getNewDataSource } from "./config/database";
+import { Article } from "./Article";
+import { ArticleInOrder } from "./ArticleInOrder";
 
 jest.mock("./lib/email");
 
 let dataSource: DataSource;
 beforeEach(async () => {
   dataSource = await getNewDataSource();
+  await Article.createBaseArticles();
 });
 
 afterEach(async () => {
@@ -16,16 +19,17 @@ afterEach(async () => {
 
 describe("static createOrder", () => {
   describe("when all article IDs belong to articles in table", () => {
-    it("returns new Order with articles", async () => {
+    it.only("returns new Order with articles", async () => {
+      const articles = await Article.find();
+
       const order = await Order.createOrder([
-        { articleId: "1234", quantity: 4 },
-        { articleId: "5678", quantity: 1 },
+        { articleId: articles[0].id, quantity: 4 },
+        { articleId: articles[1].id, quantity: 1 },
       ]);
 
-      expect(order.articlesInOrder).toEqual([
+      expect(order.articlesInOrder).toMatchObject([
         {
           article: {
-            id: "1234",
             name: "Câble HDMI",
             priceEur: 20,
             weightKg: 0.1,
@@ -34,11 +38,46 @@ describe("static createOrder", () => {
         },
         {
           article: {
-            id: "5678",
             name: "Cuisse de poulet",
             priceEur: 10,
             weightKg: 0.15,
             specialShippingCost: 4,
+          },
+          quantity: 1,
+        },
+      ]);
+    });
+
+    it.only("creates order and articles in order in database", async () => {
+      const articles = await Article.find();
+
+      await Order.createOrder([
+        { articleId: articles[0].id, quantity: 4 },
+        { articleId: articles[1].id, quantity: 1 },
+      ]);
+
+      const orders = await Order.find();
+      expect(orders).toHaveLength(1);
+
+      const articlesInOrder = await ArticleInOrder.find();
+      expect(articlesInOrder).toHaveLength(2);
+
+      expect(articlesInOrder).toMatchObject([
+        {
+          article: {
+            name: "Câble HDMI",
+            priceEur: 20,
+            specialShippingCost: null,
+            weightKg: 0.1,
+          },
+          quantity: 4,
+        },
+        {
+          article: {
+            name: "Cuisse de poulet",
+            priceEur: 10,
+            specialShippingCost: 4,
+            weightKg: 0.15,
           },
           quantity: 1,
         },

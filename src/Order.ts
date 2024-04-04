@@ -15,7 +15,9 @@ export class Order extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @OneToMany(() => ArticleInOrder, (articleInOrder) => articleInOrder.order)
+  @OneToMany(() => ArticleInOrder, (articleInOrder) => articleInOrder.order, {
+    eager: true,
+  })
   articlesInOrder!: ArticleInOrder[];
 
   @Column({ default: false })
@@ -24,23 +26,26 @@ export class Order extends BaseEntity {
   static async createOrder(
     articlesInOrder: { articleId: string; quantity: number }[]
   ): Promise<Order> {
-    const order = new Order();
-
-    for (const { articleId, quantity } of articlesInOrder) {
+    for (const { articleId } of articlesInOrder) {
       const article = await Article.findOne({ where: { id: articleId } });
       if (!article) {
         throw new Error(`Article with ID ${articleId} not found.`);
       }
+    }
 
+    const order = Order.create();
+    await order.save();
+
+    for (const { articleId, quantity } of articlesInOrder) {
+      const article = await Article.findOneOrFail({ where: { id: articleId } });
       const articleInOrder = ArticleInOrder.create();
       articleInOrder.order = order;
       articleInOrder.article = article;
       articleInOrder.quantity = quantity;
       await articleInOrder.save();
-
-      order.articlesInOrder.push(articleInOrder);
     }
 
+    await order.reload();
     return order;
   }
 
