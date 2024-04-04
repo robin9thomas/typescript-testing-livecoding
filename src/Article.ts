@@ -35,7 +35,7 @@ export class Article extends BaseEntity {
   @Column()
   weightKg!: number;
 
-  @Column({ nullable: true })
+  @Column({ type: "integer", nullable: true })
   specialShippingCost!: number | null;
 
   @OneToMany(() => ArticleInOrder, (articleInOrder) => articleInOrder.article)
