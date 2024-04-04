@@ -19,7 +19,7 @@ afterEach(async () => {
 
 describe("static createOrder", () => {
   describe("when all article IDs belong to articles in table", () => {
-    it.only("returns new Order with articles", async () => {
+    it("returns new Order with articles", async () => {
       const articles = await Article.find();
 
       const order = await Order.createOrder([
@@ -48,7 +48,7 @@ describe("static createOrder", () => {
       ]);
     });
 
-    it.only("creates order and articles in order in database", async () => {
+    it("creates order and articles in order in database", async () => {
       const articles = await Article.find();
 
       await Order.createOrder([
