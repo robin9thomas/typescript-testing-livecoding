@@ -10,4 +10,5 @@ jobs:
           node-version: "18.x"
       - run: npm ci
       - run: npm run build
-      - uses: ArtiomTr/jest-coverage-report-action@v2
+      - name: Add coverage to pull request
+        uses: ArtiomTr/jest-coverage-report-action@v2
