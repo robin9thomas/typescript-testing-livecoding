@@ -49,8 +49,9 @@ export class Order extends BaseEntity {
     return order;
   }
 
-  submitOrder() {
+  async submitOrder() {
     this.submitted = true;
+    await this.save();
     sendEmail();
   }
 
