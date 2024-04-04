@@ -87,4 +87,8 @@ export class Order extends BaseEntity {
       totalWithShipping: totalWithoutShipping + shipping,
     };
   }
+
+  async deleteOrder() {
+    await Order.delete({ id: this.id });
+  }
 }
