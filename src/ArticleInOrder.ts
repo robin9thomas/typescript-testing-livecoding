@@ -1,7 +1,14 @@
-import { BaseEntity, Column, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Article } from "./Article";
 import { Order } from "./Order";
 
+@Entity()
 export class ArticleInOrder extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
