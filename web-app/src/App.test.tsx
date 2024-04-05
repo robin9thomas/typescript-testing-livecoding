@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import App from "./App";
 
 jest.mock("./lib/http", () => {
@@ -29,7 +29,24 @@ describe("App", () => {
     });
 
     await waitFor(() => {
-      expect(articleElements[0].textContent).toEqual("Chaise");
+      expect(articleElements[0].textContent).toMatch("Chaise");
+    });
+
+    await waitFor(() => {
+      expect(articleElements[0].textContent).toMatch("0");
+    });
+
+    await waitFor(() => {
+      const buttons = within(articleElements[0]).getAllByRole("button");
+      expect(buttons).toHaveLength(2);
+    });
+
+    await waitFor(() => {
+      expect(articleElements[0].textContent).toMatch("-");
+    });
+
+    await waitFor(() => {
+      expect(articleElements[0].textContent).toMatch("+");
     });
   });
 });

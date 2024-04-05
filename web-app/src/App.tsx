@@ -28,7 +28,10 @@ function App() {
         {articles ? (
           <ul>
             {articles.map((article) => (
-              <li key={article.id}>{article.name}</li>
+              <li key={article.id}>
+                <span>{article.name}</span>
+                <button>-</button>0<button>+</button>
+              </li>
             ))}
           </ul>
         ) : (
