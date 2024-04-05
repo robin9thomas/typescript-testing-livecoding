@@ -1,5 +1,6 @@
 import React from "react";
 import { render, screen, waitFor, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import App from "./App";
 
 jest.mock("./lib/http", () => {
@@ -47,6 +48,25 @@ describe("App", () => {
 
     await waitFor(() => {
       expect(articleElements[0].textContent).toMatch("+");
+    });
+  });
+
+  describe("when button + is clicked", () => {
+    it("increments count", async () => {
+      render(<App />);
+
+      let articleElements: HTMLElement[];
+      await waitFor(() => {
+        articleElements = screen.getAllByRole("listitem");
+        const buttonPlus = within(articleElements[0]).getByText("+");
+
+        buttonPlus.click();
+        expect(articleElements[0].textContent).toMatch("1");
+      });
+
+      await waitFor(() => {
+        expect(articleElements[1].textContent).toMatch("0");
+      });
     });
   });
 });

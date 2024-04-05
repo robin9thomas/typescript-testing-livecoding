@@ -9,18 +9,33 @@ type Article = {
 };
 
 function App() {
-  const [articles, setArticles] = useState<Article[] | null>(null);
+  const [articles, setArticles] = useState<
+    (Article & { quantity: number })[] | null
+  >(null);
 
   const fetchArticles = async () => {
     const { articles: fetchedArticles } = await sendGetRequest("/api/articles");
-    setArticles(fetchedArticles as Article[]);
+    setArticles(
+      (fetchedArticles as Article[]).map((article) => ({
+        ...article,
+        quantity: 0,
+      }))
+    );
+  };
+
+  const setArticleQuantity = (id: string, quantity: number) => {
+    if (articles) {
+      setArticles(
+        articles?.map((article) =>
+          article.id === id ? { ...article, quantity } : article
+        )
+      );
+    }
   };
 
   useEffect(() => {
     fetchArticles();
   }, []);
-
-  // fetch…
 
   return (
     <div className="App">
@@ -30,7 +45,21 @@ function App() {
             {articles.map((article) => (
               <li key={article.id}>
                 <span>{article.name}</span>
-                <button>-</button>0<button>+</button>
+                <button
+                  onClick={() => {
+                    setArticleQuantity(article.id, article.quantity - 1);
+                  }}
+                >
+                  -
+                </button>
+                {article.quantity}
+                <button
+                  onClick={() => {
+                    setArticleQuantity(article.id, article.quantity + 1);
+                  }}
+                >
+                  +
+                </button>
               </li>
             ))}
           </ul>
