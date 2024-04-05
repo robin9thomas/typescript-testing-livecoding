@@ -49,6 +49,7 @@ export class Article extends BaseEntity {
       article.weightKg = baseArticle.weightKg;
       article.specialShippingCost = baseArticle.specialShippingCost ?? null;
 
+      // TODO: do not insert if article with name already exists
       await article.save();
     }
   }
