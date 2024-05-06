@@ -15,12 +15,16 @@ function App() {
 
   const fetchArticles = async () => {
     const { articles: fetchedArticles } = await sendGetRequest("/api/articles");
-    setArticles(
-      (fetchedArticles as Article[]).map((article) => ({
-        ...article,
-        quantity: 0,
-      }))
-    );
+    if (fetchedArticles) {
+      setArticles(
+        (fetchedArticles as Article[]).map((article) => ({
+          ...article,
+          quantity: 0,
+        }))
+      );
+    } else {
+      console.error('fetchedArticles is undefined');
+    }
   };
 
   const setArticleQuantity = (id: string, quantity: number) => {
